@@ -12,7 +12,7 @@ export const CompanyList = ({ children }: React.PropsWithChildren) => {
   const go = useGo();
   const { tableProps, filters } = useTable({
     resource: 'companies',
-    onSearch: (values) => {
+    onSearch: (values: { name?: string }) => {
       return [
         {
           field: 'name',

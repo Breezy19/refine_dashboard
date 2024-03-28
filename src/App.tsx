@@ -22,7 +22,6 @@ import Edit from "./pages/company/edit";
 import List from "./pages/tasks/list";
 import CreateTask from "./pages/tasks/create";
 import EditTask from "./pages/tasks/edit";
-import RegisterPage from "./pages/register";
 
 function App() {
   return (

@@ -1,4 +1,5 @@
 {
+  "homepage": "https://Breezy19.github.io/soft-spies-press/src/pages/register/index.tsx",
   "name": "soft-spies-press",
   "version": "0.1.0",
   "private": true,
@@ -47,6 +48,8 @@
   },
   "scripts": {
     "dev": "refine dev",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "build": "tsc && refine build",
     "preview": "refine start",
     "refine": "refine",

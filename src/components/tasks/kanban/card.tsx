@@ -14,6 +14,8 @@ type ProjectCardProps = {
     id: string,
     title: string,
     updatedAt: string,
+    dueDate?: string; //
+    avatarUrl: string | undefined; //
     users?: {
         id: string,
         name: string,

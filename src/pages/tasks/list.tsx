@@ -6,7 +6,7 @@ import KanbanColumn from '@/components/tasks/kanban/column'
 import KanbanItem from '@/components/tasks/kanban/item'
 import { UPDATE_TASK_STAGE_MUTATION } from '@/graphql/mutations'
 import { TASKS_QUERY, TASK_STAGES_QUERY } from '@/graphql/queries'
-import { TaskStage } from '@/graphql/schema.types'
+import { Task, TaskStage } from '@/graphql/schema.types'
 import { TasksQuery } from '@/graphql/types'
 import { DragEndEvent } from '@dnd-kit/core'
 import { useList, useNavigation, useUpdate } from '@refinedev/core'
@@ -43,7 +43,7 @@ const List = ({ children }: React.PropsWithChildren) => {
       }
     ],
     queryOptions: {
-      enabled: !!stages,
+      enabled:!!stages,
     },
     pagination: {
       mode: 'off'
@@ -56,7 +56,7 @@ const List = ({ children }: React.PropsWithChildren) => {
   const { mutate: updateTask } = useUpdate();
 
   const taskStages = React.useMemo(() => {
-    if (!tasks?.data || !stages?.data) {
+    if (!tasks?.data ||!stages?.data) {
       return {
         unassignedStage: [],
         stages: []
@@ -64,9 +64,10 @@ const List = ({ children }: React.PropsWithChildren) => {
     }
 
     const unassignedStage = tasks.data.filter((task) => task.stageId === null)
+
     const grouped: TaskStage[] = stages.data.map((stage) => ({
-      ...stage,
-      tasks: tasks.data.filter((task) => task.stageId?.toString() === stage.id)
+     ...stage,
+      tasks: tasks.data.filter((task) => task.stageId?.toString() === stage.id) as Task[]
     }))
 
     return {
@@ -77,7 +78,7 @@ const List = ({ children }: React.PropsWithChildren) => {
 
   const handleAddCard = (args: { stageId: string}) => {
     const path = args.stageId === 'unassigned' 
-      ? '/tasks/new' 
+     ? '/tasks/new' 
       : `/tasks/new?stageId=${args.stageId}`
       
       replace(path);
@@ -124,11 +125,14 @@ const List = ({ children }: React.PropsWithChildren) => {
           >
             {taskStages.unassignedStage.map((task) => (
               <KanbanItem key={task.id} id={task.id}
-                data={{ ...task, stageId: 'unassigned' }}
+                data={{...task, stageId: 'unassigned' }}
               >
                 <ProjectCardMemo 
                   {...task}
                   dueDate={task.dueDate || undefined}
+                  avatarUrl={task.users[0]?.avatarUrl ?? undefined}
+                  users={task.users.map(user => ({...user, avatarUrl: user.avatarUrl || ''}))}
+
                 />
               </KanbanItem>
             ))}
@@ -152,7 +156,9 @@ const List = ({ children }: React.PropsWithChildren) => {
                 <KanbanItem key={task.id} id={task.id} data={task}>
                   <ProjectCardMemo 
                     {...task}
-                    dueDate={task.dueDate || undefined}
+                    dueDate={task.dueDate as string|| undefined}
+                    avatarUrl={task.users[0]?.avatarUrl ?? ''}
+                    users={task.users.map(user => ({...user, avatarUrl: user.avatarUrl || ''}))}
                   />
                 </KanbanItem>
               ))}
